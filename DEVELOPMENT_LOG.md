@@ -245,4 +245,53 @@ Phase 2 (Core Features) in progress:
 - Better separation of concerns between players and system components
 - More reliable connection state management
 - Easier debugging of connection issues
-- Cleaner game state without host appearing as a player 
+- Cleaner game state without host appearing as a player
+
+## Game State and Socket Connection Improvements
+
+### Socket Connection Management
+- Fixed issue where game board would disappear after socket connection
+- Implemented proper connection type registration for host and TV views
+- Separated player join logic from host/TV registration
+- Added state preservation for game board during server updates
+
+### Technical Details
+1. Game State Preservation:
+   - Modified reducer to preserve local board state when receiving server updates
+   - Added conditional board state merging to prevent empty board overrides
+   - Implemented proper state initialization with questions data
+
+2. Connection Type Handling:
+   - Added distinct event handling for different connection types:
+     ```typescript
+     // Host registration
+     socket.emit('register_connection', {
+       gameCode: state.gameCode,
+       type: 'host'
+     });
+
+     // TV registration
+     socket.emit('register_connection', {
+       gameCode: state.gameCode,
+       type: 'tv'
+     });
+     ```
+   - Automatic connection type detection based on current route
+   - Proper cleanup of socket listeners on component unmount
+
+3. Game Board State:
+   - Ensured initial board state is properly loaded from questions data
+   - Added board state preservation in the game state reducer
+   - Fixed board initialization timing with socket connection
+
+### Benefits
+- More reliable connection handling between client and server
+- Persistent game board state across socket reconnections
+- Clear separation between player, host, and TV connection types
+- Improved state synchronization between different views
+
+### Next Steps
+- Implement proper error handling for socket connection failures
+- Add reconnection logic with state recovery
+- Consider adding connection status indicators for players
+- Add proper game state cleanup on game end 

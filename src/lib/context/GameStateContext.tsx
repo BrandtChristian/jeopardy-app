@@ -9,6 +9,7 @@ import { socket } from '../socket';
 type GameAction = 
   | { type: 'START_GAME' }
   | { type: 'END_GAME' }
+  | { type: 'RESET_GAME' }
   | { type: 'ADD_PLAYER'; player: Player }
   | { type: 'REMOVE_PLAYER'; playerId: string }
   | { type: 'UPDATE_PLAYER_SCORE'; playerId: string; newScore: number }
@@ -23,16 +24,41 @@ type GameAction =
   | { type: 'SET_QUESTION_ANSWERED'; questionId: string }
   | { type: 'SET_GAME_STATE'; state: GameState };
 
+// Debug logging for questions data
+console.log('Getting questions data for initial board...');
+const questionsData = getQuestionsByCategory();
+console.log('Questions data received:', {
+  categories: Object.keys(questionsData),
+  sampleCategory: Object.values(questionsData)[0]
+});
+
 // Convert our questions data into the board format
-const initialBoard = Object.entries(getQuestionsByCategory()).map(([name, questions]) => ({
-  name,
-  questions: questions.map(q => ({
+const initialBoard = Object.entries(questionsData).map(([name, questions]) => {
+  const processedQuestions = questions.map(q => ({
     ...q,
     value: q.amount,
     isRevealed: false,
     isAnswered: false
-  }))
-}));
+  }));
+  
+  // Debug logging for each category
+  console.log(`Processing category ${name}:`, {
+    questionCount: processedQuestions.length,
+    sample: processedQuestions[0]
+  });
+  
+  return {
+    name,
+    questions: processedQuestions
+  };
+});
+
+// Debug logging for final board
+console.log('Initial board created:', {
+  categoryCount: initialBoard.length,
+  categories: initialBoard.map(c => c.name),
+  sampleCategory: initialBoard[0]
+});
 
 // Initial state with fixed game code
 const initialState: GameState = {
@@ -57,21 +83,77 @@ const initialState: GameState = {
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'SET_GAME_STATE':
-      return action.state;
+      // Preserve our board state when receiving updates from the server
+      // and handle player state updates more carefully
+      const currentPlayerId = localStorage.getItem('playerId');
+      const isThisTabReady = localStorage.getItem(`tab_ready_${currentPlayerId}`) === 'true';
+      
+      if (currentPlayerId) {
+        // Find our current player in both states
+        const ourPlayerInCurrentState = state.players.find(p => p.id === currentPlayerId);
+        const ourPlayerInNewState = action.state.players.find(p => p.id === currentPlayerId);
+        
+        // If we're in the process of joining (exist in current but not in new state)
+        // preserve our player data
+        if (ourPlayerInCurrentState && !ourPlayerInNewState) {
+          return {
+            ...action.state,
+            board: action.state.board.length > 0 ? action.state.board : state.board,
+            players: [...action.state.players, ourPlayerInCurrentState]
+          };
+        }
+
+        // If the player exists in new state but this tab isn't ready,
+        // we should treat them as not ready in this tab
+        if (ourPlayerInNewState && !isThisTabReady) {
+          const updatedPlayers = action.state.players.map(p => 
+            p.id === currentPlayerId ? { ...p, isReady: false } : p
+          );
+          return {
+            ...action.state,
+            board: action.state.board.length > 0 ? action.state.board : state.board,
+            players: updatedPlayers
+          };
+        }
+      }
+      
+      return {
+        ...action.state,
+        board: action.state.board.length > 0 ? action.state.board : state.board
+      };
       
     case 'START_GAME':
-      socket.emit('start_game', { gameCode: state.gameCode, board: state.board });
-      return state;
+      // Send the board state when starting the game
+      socket.emit('start_game', { 
+        gameCode: state.gameCode,
+        board: initialBoard // Use our initial board with all questions
+      });
+      return {
+        ...state,
+        isActive: true
+      };
       
     case 'END_GAME':
       socket.emit('end_game', { gameCode: state.gameCode });
       return state;
       
+    case 'RESET_GAME':
+      socket.emit('reset_game', { gameCode: state.gameCode });
+      return {
+        ...initialState,
+        gameCode: state.gameCode,
+        connections: state.connections
+      };
+      
     case 'ADD_PLAYER':
-      socket.emit('join_game', { 
-        gameCode: state.gameCode, 
-        player: action.player 
-      });
+      // Only emit join_game if this player isn't already in the game
+      const existingPlayer = state.players.find(p => p.id === action.player.id);
+      if (!existingPlayer) {
+        socket.emit('join_game', { 
+          gameCode: state.gameCode, 
+          player: action.player 
+        });
+      }
       return state;
       
     case 'REMOVE_PLAYER':
@@ -145,8 +227,25 @@ export function GameStateProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
   useEffect(() => {
-    // Only connect to socket, don't join game yet
+    // Connect to socket
     socket.connect();
+
+    // When connected, register the connection type based on the current route
+    socket.on('connect', () => {
+      // Check if we're on the host or TV route
+      const path = window.location.pathname;
+      if (path === '/admin') {
+        socket.emit('register_connection', {
+          gameCode: state.gameCode,
+          type: 'host'
+        });
+      } else if (path === '/tv') {
+        socket.emit('register_connection', {
+          gameCode: state.gameCode,
+          type: 'tv'
+        });
+      }
+    });
 
     // Listen for game state updates
     socket.on('game_state_update', (newState: GameState) => {
@@ -155,6 +254,7 @@ export function GameStateProvider({ children }: { children: ReactNode }) {
 
     // Cleanup on unmount
     return () => {
+      socket.off('connect');
       socket.off('game_state_update');
       socket.disconnect();
     };

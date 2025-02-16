@@ -55,8 +55,6 @@ export const teamColors = {
 
 // Game board styling
 export const gameBoard = {
-  grid: "grid grid-cols-6 gap-4 p-6 w-[90vw] mx-auto",
-  category: "text-center font-bold text-2xl p-4 bg-zinc-900 text-white rounded-lg uppercase tracking-wide",
   tile: {
     base: "flex items-center justify-center text-4xl font-bold rounded-lg transition-all duration-200 aspect-[16/9]",
     available: "bg-zinc-800 hover:bg-zinc-700 cursor-pointer",

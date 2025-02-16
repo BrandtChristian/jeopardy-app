@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { socket } from "@/lib/socket";
 
 export function GameControl() {
-  const { state } = useGameState();
+  const { state, dispatch } = useGameState();
   const {
     startGame,
     endGame,
@@ -66,6 +66,13 @@ export function GameControl() {
     }
   };
 
+  // Add reset game action
+  const handleResetGame = () => {
+    if (window.confirm('Er du sikker på at du vil nulstille spillet? Dette vil fjerne alle spillere og nulstille alle spørgsmål.')) {
+      dispatch({ type: 'RESET_GAME' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white pb-safe-area-bottom">
       {/* Header with game controls and connection status - Fixed at top */}
@@ -93,13 +100,21 @@ export function GameControl() {
           </div>
         </div>
         
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
           <Button
             variant="outline"
             onClick={endGame}
             className="text-red-500 border-red-900 hover:bg-red-950"
           >
-            End Game
+            Afslut spil
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={handleResetGame}
+            className="text-yellow-500 border-yellow-900 hover:bg-yellow-950"
+          >
+            Nulstil spil
           </Button>
           
           <Button
@@ -113,7 +128,7 @@ export function GameControl() {
                 : "text-zinc-500"
             )}
           >
-            Start Game
+            Start spil
           </Button>
         </div>
       </div>

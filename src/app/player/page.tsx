@@ -1,51 +1,44 @@
 "use client";
 
-import { useState } from "react";
 import { PreLobby } from "@/components/player/pre-lobby";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { cn, containers, teamColors, buttons } from "@/lib/styles";
-import { useGameState, useGameActions } from "@/lib/context/GameStateContext";
+import { BuzzerScreen } from "@/components/player/buzzer-screen";
+import { useGameState } from "@/lib/context/GameStateContext";
+import { useEffect, useState } from "react";
 
 export default function PlayerPage() {
   const { state } = useGameState();
-  const { addPlayer, setPlayerReady } = useGameActions();
-  const [playerId] = useState(() => Math.random().toString(36).substring(2, 9));
+  const [playerId, setPlayerId] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-  const handleReady = (playerName: string, teamColor: keyof typeof teamColors) => {
-    addPlayer({
-      id: playerId,
-      name: playerName,
-      color: teamColor,
-      score: 0,
-      isReady: true
-    });
-  };
+  useEffect(() => {
+    setIsClient(true);
+    const storedPlayerId = localStorage.getItem('playerId');
+    setPlayerId(storedPlayerId);
+  }, []);
 
-  // Find this player in the game state
-  const player = state.players.find(p => p.id === playerId);
+  // Don't render anything until we're on the client
+  if (!isClient) {
+    return null;
+  }
 
+  const player = playerId ? state.players.find(p => p.id === playerId) : null;
+
+  // If no player is found, or player hasn't joined yet, show pre-lobby
+  if (!player || !player.isReady) {
+    return <PreLobby />;
+  }
+
+  // If game is active, show buzzer screen
+  if (state.isActive) {
+    return <BuzzerScreen />;
+  }
+
+  // If player has joined but game hasn't started, show waiting screen
   return (
-    <main className={cn(containers.page, "flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center")}>
-      {!player ? (
-        <PreLobby onReady={handleReady} />
-      ) : (
-        <div className="text-center space-y-6">
-          <h1 className="text-2xl font-bold">Venter på spilstart...</h1>
-          <Spinner className="h-8 w-8 mx-auto" />
-          <div className="space-y-2">
-            <p>Hold: {player.name}</p>
-            <p>Farve: {teamColors[player.color].danish}</p>
-          </div>
-          <Button 
-            variant="outline" 
-            onClick={() => setPlayerReady(playerId, false)}
-            className={cn(buttons.nav, "mt-8")}
-          >
-            Tilbage
-          </Button>
-        </div>
-      )}
-    </main>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-900 text-white text-center space-y-4">
+      <h2 className="text-2xl font-bold">Klar til at spille!</h2>
+      <p className="text-zinc-400">Venter på at værten starter spillet...</p>
+      <div className="animate-spin w-8 h-8 border-4 border-zinc-600 border-t-white rounded-full" />
+    </div>
   );
 } 

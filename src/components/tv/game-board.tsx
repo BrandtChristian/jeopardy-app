@@ -9,6 +9,13 @@ export function GameBoard() {
   const { state } = useGameState();
   const { selectQuestion, clearQuestion } = useGameActions();
 
+  // Debug logging
+  console.log('Game Board State:', {
+    categories: state.board.map(c => c.name),
+    questionCount: state.board.reduce((acc, cat) => acc + cat.questions.length, 0),
+    firstCategory: state.board[0]
+  });
+
   const handleQuestionClick = (category: string, value: number) => {
     const categoryData = state.board.find(c => c.name === category);
     const question = categoryData?.questions.find(q => q.value === value);
@@ -17,40 +24,52 @@ export function GameBoard() {
     }
   };
 
+  // Sort questions by value to ensure consistent order
+  const questionValues = state.board[0]?.questions.map(q => q.value).sort((a, b) => a - b) || [];
+
   return (
     <>
-      <div className={gameBoard.grid}>
-        {/* Categories */}
-        {state.board.map((category) => (
-          <Card
-            key={category.name}
-            className={cn(
-              "flex items-center justify-center p-4 text-lg font-bold",
-              "bg-zinc-900 text-white border-none",
-              "uppercase tracking-wide"
-            )}
-          >
-            {category.name}
-          </Card>
-        ))}
-
-        {/* Questions */}
-        {state.board.map((category) =>
-          category.questions.map((question) => (
+      <div className="p-6 w-[90vw] mx-auto space-y-4">
+        {/* Categories row */}
+        <div className="grid grid-cols-6 gap-4">
+          {state.board.map((category) => (
             <Card
-              key={question.id}
+              key={category.name}
               className={cn(
-                gameBoard.tile.base,
-                question.isAnswered ? gameBoard.tile.disabled : gameBoard.tile.available,
-                "text-white cursor-pointer hover:scale-[1.02] transition-transform",
-                "border border-zinc-600"
+                "flex items-center justify-center p-4 text-lg font-bold",
+                "bg-zinc-900 text-white border-none",
+                "uppercase tracking-wide"
               )}
-              onClick={() => handleQuestionClick(category.name, question.value)}
             >
-              {question.isAnswered ? "•" : question.value}
+              {category.name}
             </Card>
-          ))
-        )}
+          ))}
+        </div>
+
+        {/* Questions grid - one row for each value */}
+        {questionValues.map((value) => (
+          <div key={value} className="grid grid-cols-6 gap-4">
+            {state.board.map((category) => {
+              const question = category.questions.find(q => q.value === value);
+              if (!question) return null;
+
+              return (
+                <Card
+                  key={`${category.name}-${value}`}
+                  className={cn(
+                    gameBoard.tile.base,
+                    question.isAnswered ? gameBoard.tile.disabled : gameBoard.tile.available,
+                    "text-white cursor-pointer hover:scale-[1.02] transition-transform",
+                    "border border-zinc-600"
+                  )}
+                  onClick={() => handleQuestionClick(category.name, value)}
+                >
+                  {question.isAnswered ? "•" : question.value}
+                </Card>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
       {/* Question reveal overlay */}
