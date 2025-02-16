@@ -1,0 +1,224 @@
+{
+  "Historie": [
+    {
+      "id": "hist-1",
+      "category": "Historie",
+      "amount": 200,
+      "question": "Denne danske konge blev kendt som 'Europas svigerfar' på grund af hans børns ægteskaber",
+      "answer": "Hvem var Christian 9.?"
+    },
+    {
+      "id": "hist-2",
+      "category": "Historie",
+      "amount": 400,
+      "question": "Dette slag i 1864 var et afgørende nederlag for Danmark mod Preussen og Østrig",
+      "answer": "Hvad var Slaget ved Dybbøl?"
+    },
+    {
+      "id": "hist-3",
+      "category": "Historie",
+      "amount": 600,
+      "question": "Denne danske dronning var den første regerende kvindelige monark efter Margrethe I",
+      "answer": "Hvem var Margrethe II?"
+    },
+    {
+      "id": "hist-4",
+      "category": "Historie",
+      "amount": 800,
+      "question": "Dette år sluttede Danmarks medlemskab af Kalmarunionen",
+      "answer": "Hvad var 1523?"
+    },
+    {
+      "id": "hist-5",
+      "category": "Historie",
+      "amount": 1000,
+      "question": "Han var Danmarks første socialdemokratiske statsminister",
+      "answer": "Hvem var Thorvald Stauning?"
+    }
+  ],
+  "Geografi": [
+    {
+      "id": "geo-1",
+      "category": "Geografi",
+      "amount": 200,
+      "question": "Danmarks højeste naturlige punkt",
+      "answer": "Hvad er Møllehøj?"
+    },
+    {
+      "id": "geo-2",
+      "category": "Geografi",
+      "amount": 400,
+      "question": "Denne ø er Danmarks største",
+      "answer": "Hvad er Sjælland?"
+    },
+    {
+      "id": "geo-3",
+      "category": "Geografi",
+      "amount": 600,
+      "question": "Denne fjord er Danmarks længste",
+      "answer": "Hvad er Mariager Fjord?"
+    },
+    {
+      "id": "geo-4",
+      "category": "Geografi",
+      "amount": 800,
+      "question": "Dette land er Danmarks eneste landegrænse",
+      "answer": "Hvad er Tyskland?"
+    },
+    {
+      "id": "geo-5",
+      "category": "Geografi",
+      "amount": 1000,
+      "question": "Denne ø er Danmarks mindste beboede ø uden dæmning eller bro",
+      "answer": "Hvad er Bågø?"
+    }
+  ],
+  "Sport": [
+    {
+      "id": "sport-1",
+      "category": "Sport",
+      "amount": 200,
+      "question": "Denne sport gav Danmark sin første OL-guldmedalje i 1896",
+      "answer": "Hvad er skydning?"
+    },
+    {
+      "id": "sport-2",
+      "category": "Sport",
+      "amount": 400,
+      "question": "Dette år vandt Danmark EM i fodbold",
+      "answer": "Hvad er 1992?"
+    },
+    {
+      "id": "sport-3",
+      "category": "Sport",
+      "amount": 600,
+      "question": "Denne danske cykelrytter vandt Tour de France i 1996",
+      "answer": "Hvem er Bjarne Riis?"
+    },
+    {
+      "id": "sport-4",
+      "category": "Sport",
+      "amount": 800,
+      "question": "Hun er Danmarks mest vindende badmintonspiller",
+      "answer": "Hvem er Camilla Martin?"
+    },
+    {
+      "id": "sport-5",
+      "category": "Sport",
+      "amount": 1000,
+      "question": "Dette danske fodboldhold var det første til at vinde Mesterholdenes Europa Cup",
+      "answer": "Hvad er B1903?"
+    }
+  ],
+  "Film & TV": [
+    {
+      "id": "film-1",
+      "category": "Film & TV",
+      "amount": 200,
+      "question": "Denne danske film vandt en Oscar for bedste internationale film i 1988",
+      "answer": "Hvad er Babettes Gæstebud?"
+    },
+    {
+      "id": "film-2",
+      "category": "Film & TV",
+      "amount": 400,
+      "question": "Han instruerede 'Festen' og 'Jagten'",
+      "answer": "Hvem er Thomas Vinterberg?"
+    },
+    {
+      "id": "film-3",
+      "category": "Film & TV",
+      "amount": 600,
+      "question": "Denne TV-serie om en statsminister blev et internationalt hit",
+      "answer": "Hvad er Borgen?"
+    },
+    {
+      "id": "film-4",
+      "category": "Film & TV",
+      "amount": 800,
+      "question": "Dette dogme-princip forbyder kunstig belysning",
+      "answer": "Hvad er regel #4?"
+    },
+    {
+      "id": "film-5",
+      "category": "Film & TV",
+      "amount": 1000,
+      "question": "Denne skuespiller var den første dansker nomineret til en Oscar for bedste mandlige hovedrolle",
+      "answer": "Hvem er Mads Mikkelsen?"
+    }
+  ],
+  "Musik": [
+    {
+      "id": "musik-1",
+      "category": "Musik",
+      "amount": 200,
+      "question": "Dette band står bag 'Barbie Girl'",
+      "answer": "Hvem er Aqua?"
+    },
+    {
+      "id": "musik-2",
+      "category": "Musik",
+      "amount": 400,
+      "question": "Han skrev 'I Danmark er jeg født'",
+      "answer": "Hvem er H.C. Andersen?"
+    },
+    {
+      "id": "musik-3",
+      "category": "Musik",
+      "amount": 600,
+      "question": "Dette år vandt Danmark først Eurovision",
+      "answer": "Hvad er 1963?"
+    },
+    {
+      "id": "musik-4",
+      "category": "Musik",
+      "amount": 800,
+      "question": "Denne danske komponist skrev 'Elverskud'",
+      "answer": "Hvem er Niels W. Gade?"
+    },
+    {
+      "id": "musik-5",
+      "category": "Musik",
+      "amount": 1000,
+      "question": "Dette klassiske musikstykke af Carl Nielsen blev færdigkomponeret i 1916",
+      "answer": "Hvad er 'The Inextinguishable'?"
+    }
+  ],
+  "Videnskab": [
+    {
+      "id": "vid-1",
+      "category": "Videnskab",
+      "amount": 200,
+      "question": "Han opdagede elektromagnetismen",
+      "answer": "Hvem er H.C. Ørsted?"
+    },
+    {
+      "id": "vid-2",
+      "category": "Videnskab",
+      "amount": 400,
+      "question": "Dette grundstof blev opdaget af Hans Christian Ørsted",
+      "answer": "Hvad er aluminium?"
+    },
+    {
+      "id": "vid-3",
+      "category": "Videnskab",
+      "amount": 600,
+      "question": "Denne danske fysiker gav navn til en kvantemekanisk fortolkning",
+      "answer": "Hvem er Niels Bohr?"
+    },
+    {
+      "id": "vid-4",
+      "category": "Videnskab",
+      "amount": 800,
+      "question": "Dette danske firma udviklede den første kommercielle insulinpen",
+      "answer": "Hvad er Novo Nordisk?"
+    },
+    {
+      "id": "vid-5",
+      "category": "Videnskab",
+      "amount": 1000,
+      "question": "Denne danske matematiker beviste, at der ikke findes en generel løsning for femtegradsligninger",
+      "answer": "Hvem er Abel?"
+    }
+  ]
+} 

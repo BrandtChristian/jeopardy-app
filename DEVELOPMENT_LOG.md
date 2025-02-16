@@ -81,6 +81,38 @@ Building a web-based Jeopardy game system with host and player views, featuring 
    - Improved spacing and layout of waiting screen
    - Enhanced type safety for team color handling
 
+8. TV View and Game Board Implementation:
+   - Created core game board layout:
+     - 6x5 grid of question cards
+     - Category headers
+     - Point values from 200-1000
+     - Responsive design for 16:9 TV displays
+     - Visual distinction between categories and clickable tiles
+   - Implemented question reveal system:
+     - Full-screen overlay for questions
+     - Category and point value display
+     - Temporary dismiss button for testing
+     - Proper state management for answered questions
+     - Visual feedback for answered tiles (bullet point)
+
+9. Questions Data System:
+   - Created comprehensive data structure:
+     - TypeScript interfaces for type safety
+     - JSON-based questions database
+     - 30 Danish-themed questions across 6 categories
+     - Each question includes ID, category, amount, question, and answer
+   - Implemented questions management:
+     - Utility functions for accessing questions
+     - Category and amount management
+     - Type-safe data access
+   - Categories implemented:
+     - Historie (Danish history)
+     - Geografi (Danish geography)
+     - Sport (Danish sports)
+     - Film & TV (Danish media)
+     - Musik (Danish music)
+     - Videnskab (Danish science)
+
 ## Current Phase Progress
 Phase 1 (Basic Setup) completed:
 - [x] Create React project
@@ -92,7 +124,9 @@ Phase 2 (Core Features) in progress:
 - [x] Create main navigation menu (Spiller/Admin/TV)
 - [x] Set up placeholder route pages
 - [x] Create player pre-lobby system
-- [ ] Create game board interface
+- [x] Create game board interface
+- [x] Implement question reveal system
+- [x] Create questions database
 - [ ] Implement buzzer system
 - [ ] Design host controls
 - [ ] Set up Socket.IO integration
@@ -106,12 +140,12 @@ Phase 2 (Core Features) in progress:
 - [x] Password Protection
 - [x] Main Menu
 - [x] Basic Routing
-- [ ] Game Board
-- [ ] Question Display
+- [x] Game Board
+- [x] Question Display
 - [ ] Buzzer Interface
-- [ ] Score Display
+- [x] Score Display
 - [ ] Host Control Panel
-- [ ] Team Registration
+- [x] Team Registration
 - [ ] Timer Display
 
 ### Backend Components
@@ -130,4 +164,38 @@ Phase 2 (Core Features) in progress:
 - Player view will require valid game code
 
 ## Testing Notes
-*(To be filled as development progresses)* 
+*(To be filled as development progresses)*
+
+## 2024-02-16
+
+### Host View Implementation
+- Created comprehensive host control interface at `/admin` route
+- Designed mobile-first layout with dark theme matching the app
+- Implemented key features:
+  - Game control buttons (Start/Pause/End)
+  - Player status monitoring with team colors and scores
+  - Current question display with answer reveal controls
+  - Question selection grid split into two 3x5 tables for better mobile usability
+- Removed password protection for easier testing
+- Fixed category visibility issues with proper dark mode styling
+- Organized layout with sticky header and scrollable content
+
+### Components Created
+- `GameControl` component in `host/` directory
+  - Manages game state (started/paused)
+  - Shows player readiness and scores
+  - Provides question selection interface
+  - Displays current question and controls
+
+### UI/UX Improvements
+- Dark theme throughout with proper contrast
+- Mobile-optimized buttons and spacing
+- Split question grid into two tables for better readability
+- Sticky header for easy game control access
+- Clear visual hierarchy with card-based layout
+
+### Next Steps
+- Implement WebSocket connection for real-time updates
+- Add actual question/answer display functionality
+- Connect player score management
+- Implement buzzer system integration 

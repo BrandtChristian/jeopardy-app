@@ -1,8 +1,7 @@
+"use client";
+
+import { GameControl } from "@/components/host/game-control";
+
 export default function AdminPage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Admin View</h1>
-      <p className="mt-4">Under udvikling...</p>
-    </main>
-  );
+  return <GameControl />;
 } 
