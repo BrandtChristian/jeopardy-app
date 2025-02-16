@@ -1,41 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { QuestionReveal } from "./question-reveal";
 import { cn, gameBoard } from "@/lib/styles";
-import { getAllCategories, getAmounts } from "@/lib/questions";
+import { useGameState, useGameActions } from "@/lib/context/GameStateContext";
 
-// Get categories and amounts from our questions data
-const CATEGORIES = getAllCategories();
-const AMOUNTS = getAmounts();
+export function GameBoard() {
+  const { state } = useGameState();
+  const { selectQuestion, clearQuestion } = useGameActions();
 
-interface GameBoardProps {
-  onQuestionSelect?: (category: string, amount: number) => void;
-}
-
-export function GameBoard({ onQuestionSelect }: GameBoardProps) {
-  const [revealedQuestion, setRevealedQuestion] = useState<{
-    category: string;
-    amount: number;
-  } | null>(null);
-
-  // Track answered questions
-  const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(new Set());
-
-  const handleQuestionClick = (category: string, amount: number) => {
-    const questionId = `${category}-${amount}`;
-    if (!answeredQuestions.has(questionId)) {
-      setRevealedQuestion({ category, amount });
-      onQuestionSelect?.(category, amount);
-    }
-  };
-
-  const handleDismiss = () => {
-    if (revealedQuestion) {
-      const questionId = `${revealedQuestion.category}-${revealedQuestion.amount}`;
-      setAnsweredQuestions(prev => new Set([...prev, questionId]));
-      setRevealedQuestion(null);
+  const handleQuestionClick = (category: string, value: number) => {
+    const categoryData = state.board.find(c => c.name === category);
+    const question = categoryData?.questions.find(q => q.value === value);
+    if (question && !question.isAnswered) {
+      selectQuestion(question);
     }
   };
 
@@ -43,49 +21,45 @@ export function GameBoard({ onQuestionSelect }: GameBoardProps) {
     <>
       <div className={gameBoard.grid}>
         {/* Categories */}
-        {CATEGORIES.map((category) => (
+        {state.board.map((category) => (
           <Card
-            key={category}
+            key={category.name}
             className={cn(
               "flex items-center justify-center p-4 text-lg font-bold",
               "bg-zinc-900 text-white border-none",
               "uppercase tracking-wide"
             )}
           >
-            {category}
+            {category.name}
           </Card>
         ))}
 
         {/* Questions */}
-        {CATEGORIES.map((category) =>
-          AMOUNTS.map((amount) => {
-            const questionId = `${category}-${amount}`;
-            const isAnswered = answeredQuestions.has(questionId);
-
-            return (
-              <Card
-                key={questionId}
-                className={cn(
-                  gameBoard.tile.base,
-                  isAnswered ? gameBoard.tile.disabled : gameBoard.tile.available,
-                  "text-white cursor-pointer hover:scale-[1.02] transition-transform",
-                  "border border-zinc-600"
-                )}
-                onClick={() => handleQuestionClick(category, amount)}
-              >
-                {isAnswered ? "•" : amount}
-              </Card>
-            );
-          })
+        {state.board.map((category) =>
+          category.questions.map((question) => (
+            <Card
+              key={question.id}
+              className={cn(
+                gameBoard.tile.base,
+                question.isAnswered ? gameBoard.tile.disabled : gameBoard.tile.available,
+                "text-white cursor-pointer hover:scale-[1.02] transition-transform",
+                "border border-zinc-600"
+              )}
+              onClick={() => handleQuestionClick(category.name, question.value)}
+            >
+              {question.isAnswered ? "•" : question.value}
+            </Card>
+          ))
         )}
       </div>
 
       {/* Question reveal overlay */}
-      {revealedQuestion && (
+      {state.currentQuestion && (
         <QuestionReveal
-          category={revealedQuestion.category}
-          amount={revealedQuestion.amount}
-          onDismiss={handleDismiss}
+          category={state.currentQuestion.category}
+          amount={state.currentQuestion.value}
+          question={state.currentQuestion.question}
+          onDismiss={clearQuestion}
         />
       )}
     </>

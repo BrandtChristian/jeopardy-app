@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/styles";
+import { GameStateProvider } from "@/lib/context/GameStateContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +33,9 @@ export default function RootLayout({
           "antialiased min-h-screen bg-background font-sans"
         )}
       >
-        {children}
+        <GameStateProvider>
+          {children}
+        </GameStateProvider>
       </body>
     </html>
   );
